@@ -2570,7 +2570,12 @@ function buildCourseCard() {
   const phase = coursePhaseForDay(displayDay);
   const survToday = courseSurvivors(displayDay);
   const survYest = courseSurvivors(Math.max(1, displayDay - 1));
-  const dropouts = Math.max(0, survYest - survToday);
+  // Day 1: the dropouts are those who fell before the start line (1000 - survivors at day 1).
+  // They didn't run out of stamina — they never dared write a single objective.
+  const dropouts = displayDay === 1 ? (COURSE_N - survToday) : Math.max(0, survYest - survToday);
+  const dropoutLine = displayDay === 1
+    ? '<div class="course-stat course-stat-drop"><span class="course-stat-num">' + dropouts + '</span> n\'ont même pas eu le courage d\'écrire un seul objectif — le Virus du Doute les a cueillis avant le départ.</div>'
+    : '<div class="course-stat course-stat-drop">Hier, <span class="course-stat-num">' + dropouts + '</span> contaminés par le Virus du Doute.</div>';
 
   // Today's objectives
   const o = getCourseObjForDate(course, today);
@@ -2614,7 +2619,7 @@ function buildCourseCard() {
         '<div class="course-day-sub">dans la course</div>' +
         '<div class="course-stats">' +
           '<div class="course-stat"><span class="course-stat-num" style="color:' + phase.color + ';">' + survToday + '</span> coureurs restants</div>' +
-          (victory ? '' : '<div class="course-stat course-stat-drop">Hier, <span class="course-stat-num">' + dropouts + '</span> contaminés par le Virus du Doute.</div>') +
+          (victory ? '' : dropoutLine) +
         '</div>' +
         '<div class="course-phase-msg" style="border-left:3px solid ' + phase.color + ';">' + phase.msg + '</div>' +
       '</div>' +
