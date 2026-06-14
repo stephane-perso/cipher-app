@@ -485,6 +485,40 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 .alter-ego-img { width: 100%; max-width: 200px; aspect-ratio: 3/4; object-fit: cover; border: 1px solid var(--accent); box-shadow: 0 0 18px rgba(74,158,255,0.25); display: block; }
 .alter-ego-placeholder { width: 100%; max-width: 200px; aspect-ratio: 3/4; border: 1px dashed var(--border2); display: flex; align-items: center; justify-content: center; color: var(--text3); font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-align: center; padding: 12px; cursor: pointer; }
 .alter-ego-placeholder:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ===== LA COURSE DES 1000 JOURS ===== */
+.course-card { background: linear-gradient(135deg, #0a0f1e 0%, #0d1626 100%); }
+.course-body { display: flex; gap: 18px; align-items: stretch; }
+.course-image-wrap { flex-shrink: 0; cursor: pointer; }
+.course-image { width: 120px; aspect-ratio: 3/4; object-fit: cover; border: 1px solid var(--border2); display: block; }
+.course-image-ph { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text3); font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; border: 1px dashed var(--border2); line-height: 1.6; }
+.course-image-ph:hover { border-color: var(--accent); color: var(--accent); }
+.course-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.course-day-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 4px; color: var(--text3); }
+.course-day-number { font-family: var(--font-display); font-size: 72px; line-height: 0.9; font-weight: 500; }
+.course-day-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 3px; color: var(--text3); margin-bottom: 12px; }
+.course-stats { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.course-stat { font-family: var(--font-body); font-size: 14px; color: var(--text2); }
+.course-stat-num { font-family: var(--font-mono); font-weight: 700; font-size: 16px; }
+.course-stat-drop { color: var(--text3); font-size: 13px; }
+.course-phase-msg { font-family: var(--font-body); font-style: italic; font-size: 14px; color: var(--steel); padding: 6px 0 6px 12px; margin-top: auto; }
+.course-objectives { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+.course-obj-header { font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px; color: var(--text3); margin-bottom: 10px; display: flex; align-items: center; }
+.course-counted-badge { margin-left: auto; color: var(--green); font-size: 10px; letter-spacing: 1px; border: 1px solid var(--green); padding: 2px 8px; }
+.course-obj-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.course-check { width: 24px; height: 24px; flex-shrink: 0; border: 1px solid var(--border2); background: var(--bg); color: var(--green); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.course-check:hover { border-color: var(--accent); }
+.course-check.done { background: var(--green); color: var(--bg); border-color: var(--green); }
+.course-obj-input { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: 14px; padding: 7px 10px; }
+.course-obj-input:focus { outline: none; border-color: var(--accent); }
+.course-obj-link { color: var(--accent2); font-size: 14px; flex-shrink: 0; }
+.course-validate-btn { margin-top: 6px; width: 100%; background: transparent; border: 1px dashed var(--border2); color: var(--text3); font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; padding: 8px; cursor: pointer; transition: all .15s; }
+.course-validate-btn:hover { border-color: var(--green); color: var(--green); }
+.course-j1 { background: rgba(192,57,43,0.1); border: 1px solid var(--red); padding: 10px 12px; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.course-j1-text { flex: 1; min-width: 180px; font-family: var(--font-body); font-style: italic; font-size: 13px; color: var(--steel); }
+.course-obj-toggle-label { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; color: var(--text2); cursor: pointer; }
+.course-obj-toggle-label input { width: 16px; height: 16px; accent-color: var(--green); }
+@media (max-width: 560px) { .course-body { flex-direction: column; align-items: center; } .course-day-number { font-size: 60px; } .course-main { width: 100%; } }
 #topbar-timer { font-family: var(--font-mono); font-size: 14px; color: var(--accent); letter-spacing: 2px; border: 1px solid rgba(74,158,255,0.4); padding: 4px 10px; cursor: pointer; background: rgba(74,158,255,0.06); animation: timer-pulse 2s ease-in-out infinite; white-space: nowrap; }
 #topbar-timer.break-phase { color: var(--green); border-color: rgba(0,212,170,0.4); background: rgba(0,212,170,0.06); }
 @keyframes timer-pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
@@ -508,6 +542,8 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 .cal-cell.is-today .cal-day-num { color: var(--accent); font-weight: bold; }
 .cal-dots { display: flex; gap: 3px; flex-wrap: wrap; }
 .cal-dot { width: 8px; height: 8px; border-radius: 50%; }
+.cal-cell.course-ran { box-shadow: inset 0 0 0 2px var(--green); }
+.cal-cell.course-ran .cal-day-num { color: var(--green); }
 .cal-legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
 .cal-legend-item { font-family: var(--font-mono); font-size: 10px; color: var(--text3); letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
 @media (min-width: 800px) { .cal-cell { min-height: 84px; } #page-calendar { max-width: 900px; } }
@@ -809,6 +845,7 @@ textarea.form-input { resize: vertical; min-height: 80px; }
       <div class="cal-legend-item"><div class="cal-dot" style="background:#4a9eff;"></div>THE JOYFUL CLASSROOM</div>
       <div class="cal-legend-item"><div class="cal-dot" style="background:#f0c040;"></div>TSK</div>
       <div class="cal-legend-item"><div class="cal-dot" style="background:#00d4aa;"></div>THE SILENT POSTMAN</div>
+      <div class="cal-legend-item"><div class="cal-dot" style="background:transparent;box-shadow:inset 0 0 0 2px var(--green);border-radius:2px;"></div>JOUR COURU</div>
     </div>
   </div>
 
@@ -978,6 +1015,14 @@ function normalizeData(d) {
   d.pomodoroPresets = toArray(d.pomodoroPresets);
   if (d.journalLinkedInputId === undefined) d.journalLinkedInputId = '';
   if (!d.alterEgo) d.alterEgo = { name: '', photo: '' };
+  if (!d.course) d.course = getDefaultCourse();
+  else {
+    if (!d.course.startDate) d.course.startDate = todayStr();
+    if (!Array.isArray(d.course.daysRun)) d.course.daysRun = toArray(d.course.daysRun);
+    if (typeof d.course.image !== 'string') d.course.image = '';
+    if (!d.course.objectives || typeof d.course.objectives !== 'object') d.course.objectives = {};
+    // objectives keyed by date string -> { slots:[{text,done,taskId}], counted:bool }
+  }
   if (!d.journalPromptsSeeded) {
     if (!d.journalPrompts.length) d.journalPrompts = [
       { id: 'jp_seed1', text: "Qu'est-ce qui m'a fait sourire aujourd'hui?" },
@@ -1010,6 +1055,7 @@ function getDefaultData() {
     ],
     inputs: [], objectives: [], logs: [], categories: [...DEFAULT_CATS],
     tasks: [], journal: [], journalPrompts: [], pomodoroPresets: [], journalLinkedInputId: '', alterEgo: { name: '', photo: '' },
+    course: getDefaultCourse(),
     lastResetDate: '', initialized: true
   };
 }
@@ -1795,6 +1841,7 @@ function toggleTaskDone(taskId, checkbox) {
   }
   saveData(d);
   if (t.linkedInputId) creditLinkedInput(t.linkedInputId, 0);
+  if (t.isCourseObjective) syncTaskCompletionToCourse(t, t.due || todayStr());
   setTimeout(() => {
     renderTasks();
     if (document.getElementById('page-hq').classList.contains('active')) renderHQ();
@@ -1835,6 +1882,7 @@ function openTaskModal(editId) {
     '<div id="task-weekly-ui" class="' + (freq === 'weekly' ? '' : 'hidden') + '"><div class="weekday-row">' + weekdayBtns + '</div></div>' +
     '<div id="task-monthly-ui" class="' + (freq === 'monthly' ? '' : 'hidden') + ' mt8"><label class="form-label">DAY OF MONTH (1–31)</label><input class="form-input" type="number" min="1" max="31" id="task-monthday" value="' + (r && r.day ? r.day : new Date().getDate()) + '"></div></div>' +
     '<div class="form-group"><label class="form-label">LINK TO DAILY OPS INPUT (AUTO-CHECK + EP ON COMPLETION)</label><select class="form-select" id="task-linked">' + inpOpts + '</select></div>' +
+    '<div class="form-group"><label class="course-obj-toggle-label"><input type="checkbox" id="task-is-objective"' + (editing && editing.isCourseObjective ? ' checked' : '') + '> DÉFINIR COMME OBJECTIF DU JOUR (LA COURSE)</label></div>' +
     '<div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">CANCEL</button><button class="btn btn-primary" onclick="saveTask(' + (editing ? "'" + editing.id + "'" : 'null') + ')">' + (editing ? 'UPDATE' : 'CREATE') + '</button></div></div></div>';
   document.getElementById('modal-container').innerHTML = html;
 }
@@ -1851,6 +1899,8 @@ function saveTask(editId) {
   const catV = document.getElementById('task-cat').value;
   const freq = document.getElementById('task-freq').value;
   const linked = document.getElementById('task-linked').value || '';
+  const isObjEl = document.getElementById('task-is-objective');
+  const isCourseObjective = isObjEl ? isObjEl.checked : false;
   let recurrence = null;
   if (freq === 'daily') recurrence = { freq: 'daily' };
   else if (freq === 'weekly') {
@@ -1863,9 +1913,12 @@ function saveTask(editId) {
   if (!d.tasks) d.tasks = [];
   if (editId) {
     const t = d.tasks.find(x => x.id === editId);
-    if (t) { t.title = title; t.due = due; t.dueTime = dueTime; t.category = catV; t.recurrence = recurrence; t.linkedInputId = linked; }
+    if (t) { t.title = title; t.due = due; t.dueTime = dueTime; t.category = catV; t.recurrence = recurrence; t.linkedInputId = linked; t.isCourseObjective = isCourseObjective; }
+    if (t) syncTaskToCourseObjective(t);
   } else {
-    d.tasks.push({ id: 'task_' + Date.now(), title, category: catV, due, dueTime, recurrence, linkedInputId: linked, done: false, doneDate: null, completions: [], createdDate: new Date().toISOString() });
+    const newTask = { id: 'task_' + Date.now(), title, category: catV, due, dueTime, recurrence, linkedInputId: linked, isCourseObjective, done: false, doneDate: null, completions: [], createdDate: new Date().toISOString() };
+    d.tasks.push(newTask);
+    syncTaskToCourseObjective(newTask);
   }
   saveData(d); closeModal(); renderTasks(); showNotif(editId ? 'TASK UPDATED' : 'TASK CREATED');
   if (document.getElementById('page-hq').classList.contains('active')) renderHQ();
@@ -1922,7 +1975,8 @@ function renderCalendar() {
     const ds = _calYear + '-' + String(_calMonth + 1).padStart(2, '0') + '-' + String(c.day).padStart(2, '0');
     const tasks = tasksOnDate(ds);
     const dots = tasks.slice(0, 8).map(t => '<div class="cal-dot" style="background:' + (TASK_CATS[t.category] ? TASK_CATS[t.category].color : '#888') + ';"></div>').join('');
-    return '<div class="cal-cell' + (ds === today ? ' is-today' : '') + '" onclick="openCalDayModal(\'' + ds + '\')"><div class="cal-day-num">' + c.day + '</div><div class="cal-dots">' + dots + '</div></div>';
+    const ran = getData().course && getData().course.daysRun && getData().course.daysRun.includes(ds);
+    return '<div class="cal-cell' + (ds === today ? ' is-today' : '') + (ran ? ' course-ran' : '') + '" onclick="openCalDayModal(\'' + ds + '\')"><div class="cal-day-num">' + c.day + '</div><div class="cal-dots">' + dots + '</div></div>';
   }).join('');
   grid.innerHTML = html;
 }
@@ -2303,6 +2357,276 @@ function isInputLoggedToday(inp, log) {
   if (inp.inputType === 'text') return String(v).trim() !== '';
   return parseFloat(v) > 0;
 }
+// ============================================================
+// LA COURSE DES 1000 JOURS — Protocole Endurance
+// ============================================================
+function getDefaultCourse() {
+  return { startDate: todayStr(), daysRun: [], objectives: {}, image: '' };
+}
+
+// Phases: each defines day range, color, decay rate k, and message.
+const COURSE_PHASES = [
+  { name:'ROUGE',   min:1,   max:40,   color:'#c0392b', k:0.01925, msg:'La contamination est à son pic. Tiens le coup.' },
+  { name:'ORANGE',  min:41,  max:66,   color:'#e67e22', k:0.01669, msg:'Le virus attaque fort. Mais tu as l\'antidote.' },
+  { name:'VERTE',   min:67,  max:365,  color:'#00d4aa', k:0.00336, msg:'L\'immunité s\'installe. Tu deviens résistant.' },
+  { name:'BLEUE',   min:366, max:999,  color:'#2980b9', k:0.006321, msg:'Tu cours presque seul. Continue.' },
+  { name:'VICTOIRE',min:1000,max:99999,color:'#9b59b6', k:0,      msg:'Jour 1000. L\'autre a abandonné. Tu as gagné.' }
+];
+const COURSE_N = 1000;
+
+function coursePhaseForDay(day) {
+  for (const p of COURSE_PHASES) { if (day >= p.min && day <= p.max) return p; }
+  return COURSE_PHASES[0];
+}
+
+// Number of validated running-days = day in the race (count of distinct daysRun)
+function courseDayNumber(course) {
+  return (course.daysRun || []).length;
+}
+
+// Survivors remaining at a given day, piecewise exponential decay.
+// We integrate the per-phase k across phase boundaries so the curve is continuous.
+function courseSurvivors(day) {
+  if (day <= 0) return COURSE_N;
+  if (day >= 1000) return 1; // Victoire — l'autre a abandonné, tu franchis seul la ligne
+  let survivors = COURSE_N;
+  let prevBoundary = 0;
+  for (const p of COURSE_PHASES) {
+    if (p.name === 'VICTOIRE') break;
+    const segEnd = Math.min(day, p.max);
+    if (segEnd > prevBoundary) {
+      const elapsed = segEnd - Math.max(prevBoundary, p.min - 1);
+      survivors = survivors * Math.exp(-p.k * Math.max(0, elapsed));
+      prevBoundary = segEnd;
+    }
+    if (day <= p.max) break;
+  }
+  return Math.max(1, Math.round(survivors));
+}
+
+// Today's objectives object (3 slots). Auto-creates from linked tasks.
+function getCourseObjForDate(course, dateStr) {
+  if (!course.objectives[dateStr]) {
+    course.objectives[dateStr] = { slots: [ {text:'',done:false,taskId:''}, {text:'',done:false,taskId:''}, {text:'',done:false,taskId:''} ], counted: false };
+  }
+  const o = course.objectives[dateStr];
+  if (!Array.isArray(o.slots) || o.slots.length !== 3) {
+    o.slots = [ {text:'',done:false,taskId:''}, {text:'',done:false,taskId:''}, {text:'',done:false,taskId:''} ];
+  }
+  return o;
+}
+
+// Mark a date as "run" (counted) once. Returns true if newly counted.
+function courseCountDay(course, dateStr) {
+  if (!course.daysRun.includes(dateStr)) {
+    course.daysRun.push(dateStr);
+    course.daysRun.sort();
+    const o = getCourseObjForDate(course, dateStr);
+    o.counted = true;
+    return true;
+  }
+  return false;
+}
+
+// Check if all 3 objectives done for a date; if so, count the day.
+function courseCheckCompletion(dateStr, silent) {
+  const d = getData();
+  const o = getCourseObjForDate(d.course, dateStr);
+  const allDone = o.slots.every(s => s.done);
+  if (allDone && !d.course.daysRun.includes(dateStr)) {
+    courseCountDay(d.course, dateStr);
+    saveData(d);
+    if (!silent) {
+      const dayN = courseDayNumber(d.course);
+      showNotif('TU AS COURU UNE JOURNÉE DE PLUS! — JOUR ' + dayN);
+    }
+    return true;
+  }
+  saveData(d);
+  return false;
+}
+
+// Toggle a single objective slot
+function courseToggleSlot(dateStr, idx) {
+  const d = getData();
+  const o = getCourseObjForDate(d.course, dateStr);
+  o.slots[idx].done = !o.slots[idx].done;
+  // If this slot is linked to a task, also toggle the task done state
+  saveData(d);
+  const counted = courseCheckCompletion(dateStr, false);
+  if (!counted) { renderHQ(); }
+  else { renderHQ(); }
+}
+
+// Edit objective text inline
+function courseSetSlotText(dateStr, idx, value) {
+  const d = getData();
+  const o = getCourseObjForDate(d.course, dateStr);
+  o.slots[idx].text = value;
+  saveData(d);
+}
+
+// Manual override: validate the whole day even with a single action
+function courseValidateDayManual(dateStr) {
+  const d = getData();
+  const o = getCourseObjForDate(d.course, dateStr);
+  o.slots.forEach(s => s.done = true);
+  courseCountDay(d.course, dateStr);
+  saveData(d);
+  showNotif('JOURNÉE VALIDÉE — TU AS COURU.');
+  renderHQ();
+}
+
+// J-1 recovery: validate yesterday if not counted and within 24h window
+function courseValidateYesterday() {
+  const d = getData();
+  const yest = addDaysStr(todayStr(), -1);
+  const o = getCourseObjForDate(d.course, yest);
+  o.slots.forEach(s => s.done = true);
+  courseCountDay(d.course, yest);
+  saveData(d);
+  showNotif('J-1 VALIDÉE — TU AVAIS JUSTE OUBLIÉ DE SIGNER LE REGISTRE.');
+  renderHQ();
+}
+
+// Set / change the course image (3:4)
+function openCourseImageModal() {
+  const d = getData();
+  const img = d.course.image || '';
+  const preview = img
+    ? '<img src="' + img + '" style="max-width:160px;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--accent);display:block;margin:0 auto 8px;">'
+    : '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  const html = '<div class="modal-overlay"><div class="modal"><div class="modal-title">IMAGE DE COURSE</div>' +
+    '<div class="form-group"><label class="form-label">IMAGE (3:4 — PORTRAIT)</label>' +
+    '<div class="img-upload-zone"><input type="file" accept="image/*" onchange="handleCourseImg(event)"><div id="course-img-preview">' + preview + '</div><div class="upload-hint">TAP TO UPLOAD / CHANGE</div></div>' +
+    '<input type="hidden" id="course-img-data" value="' + (img || '') + '"></div>' +
+    '<div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">CANCEL</button><button class="btn btn-primary" onclick="saveCourseImg()">SAVE</button></div></div></div>';
+  document.getElementById('modal-container').innerHTML = html;
+}
+async function handleCourseImg(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const data = await imageToDataURL(file, 640);
+  document.getElementById('course-img-data').value = data;
+  document.getElementById('course-img-preview').innerHTML = '<img src="' + data + '" style="max-width:160px;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--accent);display:block;margin:0 auto 8px;">';
+}
+function saveCourseImg() {
+  const d = getData();
+  d.course.image = document.getElementById('course-img-data').value || '';
+  saveData(d); closeModal(); renderHQ(); showNotif('IMAGE DE COURSE MISE À JOUR');
+}
+
+// ---- Tâches → Objectifs liaison ----
+// Place a task (flagged isCourseObjective) into an empty/ matching slot for its due date.
+function syncTaskToCourseObjective(task) {
+  const d = getData();
+  if (!task.isCourseObjective) {
+    // remove from any objective slot that references it
+    Object.keys(d.course.objectives).forEach(dateStr => {
+      const o = d.course.objectives[dateStr];
+      o.slots.forEach(s => { if (s.taskId === task.id) { s.taskId = ''; if (!s.done) s.text = ''; } });
+    });
+    return;
+  }
+  const dateStr = task.recurrence && task.recurrence.freq ? todayStr() : task.due;
+  const o = getCourseObjForDate(d.course, dateStr);
+  // already placed?
+  if (o.slots.some(s => s.taskId === task.id)) {
+    const existing = o.slots.find(s => s.taskId === task.id);
+    existing.text = task.title;
+    return;
+  }
+  // find empty slot
+  let slot = o.slots.find(s => !s.text && !s.taskId);
+  if (!slot) slot = o.slots.find(s => !s.taskId); // overwrite a free-text slot if none empty
+  if (slot) { slot.taskId = task.id; slot.text = task.title; }
+}
+
+// When a task completes, auto-check its linked course objective slot.
+function syncTaskCompletionToCourse(task, dateStr) {
+  const d = getData();
+  // scan today's + the task date objectives
+  const targets = [todayStr(), dateStr].filter((v,i,a)=>a.indexOf(v)===i);
+  let changed = false;
+  targets.forEach(ds => {
+    const o = d.course.objectives[ds];
+    if (!o) return;
+    o.slots.forEach(s => { if (s.taskId === task.id && !s.done) { s.done = true; changed = true; } });
+  });
+  if (changed) { saveData(d); courseCheckCompletion(todayStr(), false); }
+}
+
+
+function buildCourseCard() {
+  const d = getData();
+  // Pull any objective-flagged tasks due today into the slots
+  (d.tasks || []).filter(t => t.isCourseObjective && !t.done).forEach(t => {
+    const due = t.recurrence && t.recurrence.freq ? todayStr() : t.due;
+    if (due === todayStr()) syncTaskToCourseObjective(t);
+  });
+  const course = d.course;
+  const today = todayStr();
+  const dayN = courseDayNumber(course);
+  const displayDay = Math.max(1, dayN === 0 ? 1 : dayN);
+  const phase = coursePhaseForDay(displayDay);
+  const survToday = courseSurvivors(displayDay);
+  const survYest = courseSurvivors(Math.max(1, displayDay - 1));
+  const dropouts = Math.max(0, survYest - survToday);
+
+  // Today's objectives
+  const o = getCourseObjForDate(course, today);
+  const countedToday = course.daysRun.includes(today);
+
+  // J-1 banner check
+  const yest = addDaysStr(today, -1);
+  const yestCounted = course.daysRun.includes(yest);
+  // only show banner if a course already started (dayN>0 historically) and yesterday is recoverable
+  const courseStarted = dayN > 0 || Object.keys(course.objectives).length > 0;
+  const showJ1 = courseStarted && !yestCounted && yest >= course.startDate;
+
+  const slotsHtml = o.slots.map((s, i) => {
+    const linked = s.taskId ? '<span class="course-obj-link">⚡</span>' : '';
+    return '<div class="course-obj-row">' +
+      '<button class="course-check' + (s.done ? ' done' : '') + '" onclick="courseToggleSlot(\'' + today + '\',' + i + ')" aria-label="objectif ' + (i+1) + '">' + (s.done ? '✓' : '') + '</button>' +
+      '<input class="course-obj-input" type="text" placeholder="Objectif ' + (i+1) + '" value="' + escHtml(s.text) + '" oninput="courseSetSlotText(\'' + today + '\',' + i + ',this.value)"' + (s.done ? ' style="text-decoration:line-through;color:var(--text3);"' : '') + '>' + linked +
+      '</div>';
+  }).join('');
+
+  const j1Banner = showJ1
+    ? '<div class="course-j1"><div class="course-j1-text">Hier est encore récupérable. Le virus n\'a pas encore officialisé ton abandon. Valide ta journée.</div>' +
+      '<button class="btn btn-primary btn-sm" onclick="courseValidateYesterday()">OUI, J\'AI COURU HIER</button></div>'
+    : '';
+
+  const victory = displayDay >= 1000;
+
+  return '<div class="hq-card hq-span2 course-card" style="border-color:' + phase.color + ';">' +
+    '<div class="hq-card-title" style="color:' + phase.color + ';">LA COURSE DES 1000 JOURS' +
+      '<button class="hq-link" onclick="openCourseImageModal()" style="margin-left:auto;">IMAGE →</button></div>' +
+    j1Banner +
+    '<div class="course-body">' +
+      '<div class="course-image-wrap" onclick="openCourseImageModal()">' +
+        (course.image
+          ? '<img class="course-image" src="' + course.image + '">'
+          : '<div class="course-image course-image-ph">IMAGE<br>DE COURSE<br><span style="font-size:9px;">TAP POUR CONFIGURER</span></div>') +
+      '</div>' +
+      '<div class="course-main">' +
+        '<div class="course-day-label">JOUR</div>' +
+        '<div class="course-day-number" style="color:' + phase.color + ';">' + displayDay + '</div>' +
+        '<div class="course-day-sub">dans la course</div>' +
+        '<div class="course-stats">' +
+          '<div class="course-stat"><span class="course-stat-num" style="color:' + phase.color + ';">' + survToday + '</span> coureurs restants</div>' +
+          (victory ? '' : '<div class="course-stat course-stat-drop">Hier, <span class="course-stat-num">' + dropouts + '</span> contaminés par le Virus du Doute.</div>') +
+        '</div>' +
+        '<div class="course-phase-msg" style="border-left:3px solid ' + phase.color + ';">' + phase.msg + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="course-objectives">' +
+      '<div class="course-obj-header">LES 3 OBJECTIFS DU JOUR' + (countedToday ? '<span class="course-counted-badge">JOURNÉE COMPTÉE ✓</span>' : '') + '</div>' +
+      slotsHtml +
+      (countedToday ? '' : '<button class="course-validate-btn" onclick="courseValidateDayManual(\'' + today + '\')">UNE SEULE ACTION = MA JOURNÉE → VALIDER</button>') +
+    '</div>' +
+    '</div>';
+}
+
 function renderHQ() {
   const d = getData();
   const today = todayStr();
@@ -2359,6 +2683,7 @@ function renderHQ() {
     '<div style="display:flex;justify-content:center;">' + aePhoto + '</div></div>';
 
   grid.innerHTML =
+    buildCourseCard() +
     '<div class="hq-card"><div class="hq-card-title">AGENT STATUS</div>' +
     '<div style="display:flex;align-items:center;gap:16px;">' + gradeImg +
     '<div style="flex:1;min-width:0;"><div style="font-family:var(--font-display);font-size:30px;color:var(--accent);letter-spacing:3px;line-height:1;">' + (grade ? grade.name : 'ALPHA') + '</div>' +
