@@ -878,6 +878,45 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     </div>
   </div>
 
+  <!-- OUTPUT -->
+  <div class="page" id="page-output">
+    <div class="sec-title">OUTPUT</div>
+    <div class="sec-sub">EXPORT MISSION LOGS — JOURNAL, TASKS & DAILY OPS</div>
+    <div class="settings-section">
+      <div class="settings-title">DATE RANGE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div><label class="form-label">FROM</label><input class="form-input" type="date" id="output-from"></div>
+        <div><label class="form-label">TO</label><input class="form-input" type="date" id="output-to"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="setOutputRange(7)">LAST 7 DAYS</button>
+        <button class="btn btn-secondary btn-sm" onclick="setOutputRange(14)">LAST 14 DAYS</button>
+        <button class="btn btn-secondary btn-sm" onclick="setOutputRange(30)">LAST 30 DAYS</button>
+        <button class="btn btn-secondary btn-sm" onclick="setOutputRange('all')">ALL TIME</button>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">INCLUDE</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <label style="display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;color:var(--text2);">
+          <input type="checkbox" id="output-inc-journal" checked style="width:18px;height:18px;accent-color:var(--accent);">JOURNAL ENTRIES
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;color:var(--text2);">
+          <input type="checkbox" id="output-inc-tasks" checked style="width:18px;height:18px;accent-color:var(--accent);">COMPLETED TASKS
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;color:var(--text2);">
+          <input type="checkbox" id="output-inc-ops" checked style="width:18px;height:18px;accent-color:var(--accent);">DAILY OPS STATS
+        </label>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">EXPORT</div>
+      <p style="font-family:var(--font-mono);font-size:12px;color:var(--text2);margin-bottom:12px;">GENERATES A SINGLE .MD FILE — READY FOR OBSIDIAN</p>
+      <button class="btn btn-primary btn-full" onclick="exportOutput()">⬇ EXPORT (.MD)</button>
+      <div id="output-preview-msg" style="font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-top:10px;min-height:16px;"></div>
+    </div>
+  </div>
+
   <!-- INTEL DETAIL -->
   <div class="page" id="page-intel-detail">
     <button class="intel-back-btn" onclick="navTo('stats')">◀ BACK TO INTEL</button>
@@ -929,6 +968,9 @@ textarea.form-input { resize: vertical; min-height: 80px; }
         </div>
         <div class="more-item" onclick="navTo('settings')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>CONFIG
+        </div>
+        <div class="more-item" onclick="navTo('output')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>OUTPUT
         </div>
       </div>
     </div>
@@ -1692,6 +1734,7 @@ function navTo(name) {
   if (name === 'settings') renderSettings();
   if (name === 'ach') renderAchievements();
   if (name === 'missions') renderMissions();
+  if (name === 'output') initOutputPage();
   window.scrollTo(0, 0);
 }
 // Back-compat: old showPage calls route through navTo
@@ -2960,6 +3003,115 @@ function buildHeatmapSVG(inp, d) {
     if (m !== lastMonth) { monthLabels += '<text x="' + (26 + w * (CELL + GAP)) + '" y="' + (H - 4) + '" font-size="8" fill="#8aacca" font-family="monospace">' + MONTH_LABELS[m].slice(0, 3) + '</text>'; lastMonth = m; }
   }
   return '<svg viewBox="0 0 ' + W + ' ' + H + '" style="min-width:' + W + 'px;height:auto;display:block;">' + dowLabels + rects + monthLabels + '</svg>';
+}
+
+// === OUTPUT: COMBINED EXPORT (JOURNAL + TASKS + DAILY OPS) ===
+function setOutputRange(days) {
+  const to = todayStr();
+  let from;
+  if (days === 'all') {
+    from = '0000-00-00';
+  } else {
+    const d = new Date();
+    d.setDate(d.getDate() - (days - 1));
+    from = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  document.getElementById('output-from').value = days === 'all' ? '' : from;
+  document.getElementById('output-to').value = to;
+}
+function initOutputPage() {
+  const fromEl = document.getElementById('output-from');
+  const toEl = document.getElementById('output-to');
+  if (fromEl && !fromEl.value && !toEl.value) setOutputRange(7);
+}
+function exportOutput() {
+  const d = getData();
+  const fromRaw = document.getElementById('output-from').value;
+  const toRaw = document.getElementById('output-to').value;
+  const from = fromRaw || '0000-00-00';
+  const to = toRaw || todayStr();
+  const incJournal = document.getElementById('output-inc-journal').checked;
+  const incTasks = document.getElementById('output-inc-tasks').checked;
+  const incOps = document.getElementById('output-inc-ops').checked;
+
+  const rangeLogs = (d.logs || []).filter(l => l.date >= from && l.date <= to).sort((a, b) => a.date.localeCompare(b.date));
+  const rangeJournal = (d.journal || []).filter(e => e.date >= from && e.date <= to).sort((a, b) => a.date.localeCompare(b.date));
+  const rangeTasksDone = (d.tasks || []).filter(t => {
+    if (t.recurrence && t.recurrence.freq) {
+      return (t.completions || []).some(c => c.date >= from && c.date <= to);
+    }
+    if (!t.done || !t.doneDate) return false;
+    const dd = t.doneDate.slice(0, 10);
+    return dd >= from && dd <= to;
+  }).sort((a, b) => (a.doneDate || '').localeCompare(b.doneDate || ''));
+
+  if (!rangeLogs.length && !rangeJournal.length && !rangeTasksDone.length) {
+    showNotif('NO DATA IN THIS RANGE'); return;
+  }
+
+  let md = '# CIPHER — MISSION OUTPUT\n\n*Agent : The Silent Postman*  \n*Période : ' + from + ' → ' + to + '*  \n*Généré : ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + '*\n\n---\n\n';
+
+  if (incOps && (d.inputs || []).length) {
+    md += '## DAILY OPS — STATS\n\n';
+    d.inputs.forEach(inp => {
+      const logsWithVal = rangeLogs.filter(l => l.entries && l.entries[inp.id] !== undefined && l.entries[inp.id] !== '' && l.entries[inp.id] !== false);
+      if (inp.inputType === 'checkbox') {
+        const doneDays = rangeLogs.filter(l => l.entries[inp.id] == 1 || l.entries[inp.id] === true).length;
+        md += '- **' + inp.name + '** (' + (inp.category || '') + ') — ' + doneDays + '/' + rangeLogs.length + ' jours complétés\n';
+      } else if (inp.inputType === 'text') {
+        md += '- **' + inp.name + '** (' + (inp.category || '') + ') — ' + logsWithVal.length + ' entrées loggées\n';
+      } else {
+        const vals = rangeLogs.map(l => parseFloat(l.entries[inp.id]) || 0);
+        const total = vals.reduce((s, v) => s + v, 0);
+        const loggedVals = vals.filter(v => v > 0);
+        const avg = loggedVals.length ? (total / loggedVals.length).toFixed(1) : '0';
+        const best = vals.length ? Math.max(...vals) : 0;
+        let extra = '';
+        if (inp.inputType === 'digital_product') extra = ' — $' + (total * (inp.digitalPrice || 0)).toFixed(2) + ' revenu';
+        md += '- **' + inp.name + '** (' + (inp.category || '') + ') — total: ' + total + ', moy: ' + avg + ', meilleur: ' + best + extra + '\n';
+      }
+    });
+    md += '\n---\n\n';
+  }
+
+  if (incTasks) {
+    md += '## TÂCHES COMPLÉTÉES (' + rangeTasksDone.length + ')\n\n';
+    if (!rangeTasksDone.length) {
+      md += '*Aucune tâche complétée dans cette période.*\n\n';
+    } else {
+      rangeTasksDone.forEach(t => {
+        let dateLabel = t.doneDate ? t.doneDate.slice(0, 10) : '';
+        if (t.recurrence && t.recurrence.freq) {
+          const inRangeCompletions = (t.completions || []).filter(c => c.date >= from && c.date <= to).map(c => c.date);
+          dateLabel = inRangeCompletions.join(', ');
+        }
+        md += '- [x] ' + t.title + (t.category ? ' `' + t.category + '`' : '') + (dateLabel ? ' — ' + dateLabel : '') + '\n';
+      });
+      md += '\n';
+    }
+    md += '---\n\n';
+  }
+
+  if (incJournal) {
+    md += '## JOURNAL DE BORD (' + rangeJournal.length + ' entrées)\n\n';
+    if (!rangeJournal.length) {
+      md += '*Aucune entrée de journal dans cette période.*\n\n';
+    } else {
+      rangeJournal.forEach(e => {
+        md += '### ' + e.date + '\n\n**' + GRATITUDE_LABEL + '**\n\n' + (e.gratitude || '') + '\n\n';
+        if (e.promptText) md += '**' + e.promptText + '**\n\n' + (e.answer || '') + '\n\n';
+        md += '---\n\n';
+      });
+    }
+  }
+
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cipher_output_' + from + '_' + to + '.md';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  showNotif('OUTPUT EXPORTED (.MD)');
+  document.getElementById('output-preview-msg').textContent = rangeJournal.length + ' entrées journal · ' + rangeTasksDone.length + ' tâches · ' + rangeLogs.length + ' jours d\'ops';
 }
 
 // === DATA BACKUP: EXPORT ===
