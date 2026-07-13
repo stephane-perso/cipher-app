@@ -2422,9 +2422,19 @@ function coursePhaseForDay(day) {
   return COURSE_PHASES[0];
 }
 
-// Number of validated running-days = day in the race (count of distinct daysRun)
+// Day in the race = length of the CURRENT CONSECUTIVE streak ending today
+// (or yesterday, if today isn't validated yet). Any missed day breaks the
+// streak and the race restarts at 0. Une promesse, c'est tous les jours.
 function courseDayNumber(course) {
-  return (course.daysRun || []).length;
+  const days = course.daysRun || [];
+  if (!days.length) return 0;
+  const set = new Set(days);
+  let cur = todayStr();
+  if (!set.has(cur)) cur = addDaysStr(cur, -1); // today not validated yet — anchor on yesterday
+  if (!set.has(cur)) return 0; // gap of 2+ days → the streak is broken, race resets
+  let n = 0;
+  while (set.has(cur)) { n++; cur = addDaysStr(cur, -1); }
+  return n;
 }
 
 // Survivors remaining at a given day, piecewise exponential decay.
@@ -2624,12 +2634,20 @@ function buildCourseCard() {
   const o = getCourseObjForDate(course, today);
   const countedToday = course.daysRun.includes(today);
 
-  // J-1 banner check
+  // J-1 banner check — only recoverable if it actually SAVES the streak:
+  // the day before yesterday must be validated (or the race is brand new).
   const yest = addDaysStr(today, -1);
   const yestCounted = course.daysRun.includes(yest);
-  // only show banner if a course already started (dayN>0 historically) and yesterday is recoverable
-  const courseStarted = dayN > 0 || Object.keys(course.objectives).length > 0;
-  const showJ1 = courseStarted && !yestCounted && yest >= course.startDate;
+  const dayBeforeYest = addDaysStr(today, -2);
+  const streakSavable = course.daysRun.includes(dayBeforeYest) || (course.daysRun.length === 0 && Object.keys(course.objectives).length > 0);
+  const showJ1 = !yestCounted && streakSavable && yest >= course.startDate;
+
+  // Reset detection: days were run in the past, but the streak is broken.
+  const totalEverRun = (course.daysRun || []).length;
+  const wasReset = totalEverRun > 0 && dayN === 0;
+  const resetBanner = wasReset
+    ? '<div class="course-j1"><div class="course-j1-text">Le Virus du Doute t\'a rattrapé — ' + totalEverRun + ' jour' + (totalEverRun > 1 ? 's' : '') + ' de course effacé' + (totalEverRun > 1 ? 's' : '') + '. La promesse recommence aujourd\'hui : JOUR 1. Lace tes souliers.</div></div>'
+    : '';
 
   const slotsHtml = o.slots.map((s, i) => {
     const linked = s.taskId ? '<span class="course-obj-link">⚡</span>' : '';
@@ -2649,6 +2667,7 @@ function buildCourseCard() {
   return '<div class="hq-card hq-span2 course-card" style="border-color:' + phase.color + ';">' +
     '<div class="hq-card-title" style="color:' + phase.color + ';">LA COURSE DES 1000 JOURS' +
       '<button class="hq-link" onclick="openCourseImageModal()" style="margin-left:auto;">IMAGE →</button></div>' +
+    resetBanner +
     j1Banner +
     '<div class="course-body">' +
       '<div class="course-image-wrap" onclick="openCourseImageModal()">' +
