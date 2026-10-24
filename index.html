@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyDi-cCSGQz1MHUZ6InT8J5PsIZlKk2dGBI",
@@ -22,9 +23,38 @@ const db = firebase.database();
 const USER_ID = 'silent_postman';
 function fbSave(data) {
   showSaveIndicator('saving');
+  if (!auth.currentUser) { console.warn('Cipher: sauvegarde ignorée (non connecté)'); return Promise.resolve(); }
   return db.ref('users/' + USER_ID).set(data).then(function(){ showSaveIndicator('saved'); });
 }
-function fbLoad(callback) { db.ref('users/' + USER_ID).once('value').then(function(snap) { callback(snap.val()); }); }
+// === AUTHENTIFICATION GOOGLE (sécurité Firebase) ===
+const auth = firebase.auth();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+function fbAuthError(err) {
+  var msg = 'ACCESS DENIED — GOOGLE SIGN-IN FAILED';
+  var code = (err && err.code) || '';
+  if (code.indexOf('popup-blocked') > -1) msg = 'POP-UP BLOQUÉE — AUTORISE LES POP-UPS POUR CE SITE';
+  else if (code.indexOf('popup-closed') > -1 || code.indexOf('cancelled-popup') > -1) msg = 'CONNEXION GOOGLE ANNULÉE';
+  else if (code.indexOf('unauthorized-domain') > -1) msg = 'DOMAINE NON AUTORISÉ DANS FIREBASE';
+  else if (code.indexOf('PERMISSION_DENIED') > -1 || String(err).indexOf('ermission') > -1) { msg = 'MAUVAIS COMPTE GOOGLE — ACCÈS REFUSÉ'; auth.signOut(); }
+  var le = document.getElementById('login-error'); if (le) le.textContent = msg;
+  var lm = document.getElementById('load-msg'); if (lm) lm.remove();
+  var btn = document.getElementById('btn-login'); if (btn) { btn.disabled = false; btn.textContent = 'ACCESS GRANTED'; }
+  if (typeof _numpadVal !== 'undefined') { _numpadVal = ''; if (typeof updateNumpadDisplay === 'function') updateNumpadDisplay(); }
+  console.error('Cipher auth:', err);
+}
+function fbEnsureAuth() {
+  // Appelé directement depuis le clic de connexion : la pop-up n'est pas bloquée.
+  if (auth.currentUser) return Promise.resolve(auth.currentUser);
+  return auth.signInWithPopup(googleProvider).then(function(r) { return r.user; });
+}
+function fbLoad(callback) {
+  fbEnsureAuth()
+    .then(function() { return db.ref('users/' + USER_ID).once('value'); })
+    .then(function(snap) { callback(snap.val()); })
+    .catch(fbAuthError);
+}
+function fbSignOut() { auth.signOut().then(function() { location.reload(); }); }
 </script>
 <style>
 :root {
@@ -765,8 +795,9 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     <div class="settings-section" style="border-color:rgba(74,158,255,0.15);">
       <div class="settings-title" style="font-size:12px;color:var(--text2);">FIREBASE SECURITY RULES</div>
       <p style="font-family:var(--font-mono);font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:10px;">Apply these rules in your <a href="https://console.firebase.google.com/project/cipher-app-d9f4d/database/cipher-app-d9f4d-default-rtdb/rules" target="_blank" style="color:var(--accent);">Firebase Console → Rules</a> to block all public access:</p>
-      <pre style="background:var(--bg3);border:1px solid var(--border);padding:12px;font-family:var(--font-mono);font-size:11px;color:var(--text2);overflow-x:auto;line-height:1.6;white-space:pre-wrap;">{"rules":{"users":{"silent_postman":{".read":true,".write":true}}}}</pre>
-      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:6px;">// SEUL silent_postman EST ACCESSIBLE — TOUT LE RESTE EST BLOQUÉ //</div>
+      <pre style="background:var(--bg3);border:1px solid var(--border);padding:12px;font-family:var(--font-mono);font-size:11px;color:var(--text2);overflow-x:auto;line-height:1.6;white-space:pre-wrap;">{"rules":{".read":false,".write":false,"users":{"silent_postman":{".read":"auth != null &amp;&amp; auth.token.email_verified == true &amp;&amp; auth.token.email == 'TON_COURRIEL@gmail.com'",".write":"auth != null &amp;&amp; auth.token.email_verified == true &amp;&amp; auth.token.email == 'TON_COURRIEL@gmail.com'"}}}}</pre>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:6px;">// SEUL TON COMPTE GOOGLE PEUT LIRE OU ÉCRIRE — TOUT LE RESTE EST BLOQUÉ //</div>
+      <button class="btn btn-secondary btn-sm" style="margin-top:10px;" onclick="fbSignOut()">DÉCONNEXION GOOGLE</button><div style="display:none"></div>
     </div>
   </div>
 
