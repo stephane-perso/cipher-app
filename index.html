@@ -24,7 +24,9 @@ const USER_ID = 'silent_postman';
 function fbSave(data) {
   showSaveIndicator('saving');
   if (!auth.currentUser) { console.warn('Cipher: sauvegarde ignorée (non connecté)'); return Promise.resolve(); }
-  return db.ref('users/' + USER_ID).set(data).then(function(){ showSaveIndicator('saved'); });
+  // CIPHER HQ SYNC: update() keeps the hqInbox that the HQ agents write to
+  var payload = Object.assign({}, data); delete payload.hqInbox;
+  return db.ref('users/' + USER_ID).update(payload).then(function(){ showSaveIndicator('saved'); });
 }
 // === AUTHENTIFICATION GOOGLE (sécurité Firebase) ===
 const auth = firebase.auth();
@@ -1010,6 +1012,43 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 
 <div id="modal-container"></div>
 <script>
+// === CIPHER HQ SYNC — entries sent by your CIPHER HQ agents ===
+var _hqSyncOn = false;
+function startHQSync() {
+  if (_hqSyncOn) return; _hqSyncOn = true;
+  db.ref('users/' + USER_ID + '/hqInbox').on('child_added', function(snap) {
+    var item = snap.val(); if (!item) return;
+    // claim the entry (delete it) so it is applied exactly once, even with two tabs open
+    snap.ref.transaction(function(cur) { return cur === null ? undefined : null; }, function(err, committed) {
+      if (!err && committed) applyHQEntry(item);
+    }, false);
+  });
+}
+function applyHQEntry(item) {
+  var d = getData(); if (!d || !d.inputs) return;
+  var inp = d.inputs.find(function(i) { return i.id === item.inputId; });
+  if (!inp) return;
+  var date = item.date || todayStr();
+  var log = d.logs.find(function(l) { return l.date === date; });
+  if (!log) { log = { date: date, entries: {} }; d.logs.push(log); }
+  if (!log.entries) log.entries = {};
+  var numeric = ['number','duration','rating','digital_product'].indexOf(inp.inputType) > -1;
+  var v;
+  if (inp.inputType === 'checkbox') v = item.value ? 1 : 0;
+  else if (inp.inputType === 'text') v = String(item.value || '');
+  else if (numeric) { var n = parseFloat(item.value) || 0; v = (item.mode === 'set' || inp.inputType === 'rating') ? n : (parseFloat(log.entries[inp.id]) || 0) + n; }
+  else return;
+  var before = d.totalXP || 0;
+  log.entries[inp.id] = v;
+  saveData(d);
+  recalcTotalXP();
+  var gained = (getData().totalXP || 0) - before;
+  showNotif('HQ LOGGED: ' + String(inp.name).toUpperCase() + (gained > 0 ? ' · +' + gained + ' EP' : ''));
+  if (gained > 0) showFlash('+' + gained + ' EP');
+  updateTopBar(); checkGradeUp();
+  if (document.getElementById('page-ops').classList.contains('active')) renderDailyInputs();
+  if (document.getElementById('page-hq').classList.contains('active')) renderHQ();
+}
 // === SAVE INDICATOR ===
 var _saveIndicatorTimeout = null;
 function showSaveIndicator(state) {
@@ -1076,6 +1115,7 @@ function toArray(val) {
 }
 function normalizeData(d) {
   if (!d) return d;
+  if (d.hqInbox) delete d.hqInbox;
   d.inputs = toArray(d.inputs); d.objectives = toArray(d.objectives);
   d.logs = toArray(d.logs); d.grades = toArray(d.grades); d.categories = toArray(d.categories);
   d.logs.forEach(log => { if (log && !log.entries) log.entries = {}; });
@@ -1218,6 +1258,7 @@ function doLogin() {
         document.getElementById('login-error').textContent = '';
         checkDailyReset(); recalcTotalXP(); refreshAll();
         setTimeout(showMissionBriefing, 350);
+        startHQSync();
       }, 400);
     } else {
       document.getElementById('login-error').textContent = 'ACCESS DENIED — INVALID CODE';
